@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One path, refined</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+/* the style of the zero-set page (talk/zero_set) and of the talk pictures */
+:root {
+  --bg: #ffffff; --ink: #0c234b; --muted: #55607a; --rule: #d6dae2; --accent: #ab0520; --teal: #00808c;
+  --ghost: #b4b4b4; --violet: #804da6; --band: rgba(171, 5, 32, 0.12);
+  --body: "LM", "LMM", "LMX", "Latin Modern Roman", "Computer Modern", serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #0d1220; --ink: #c9d6f2; --muted: #93a0b8; --rule: #2a3550; --accent: #ff6b7f; --teal: #4cc9d4;
+          --ghost: #4b5671; --violet: #b39dff; --band: rgba(255, 107, 127, 0.16); color-scheme: dark; }
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5;
+       padding: 28px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); margin: 0; }
+main { max-width: 920px; margin: 0 auto; display: grid; gap: 24px; }
+header { display: grid; gap: 6px; }
+h1 { font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.15; margin: 0; text-wrap: balance; }
+h2 { font-weight: 700; font-size: 1.3rem; margin: 0; }
+.lede { color: var(--muted); max-width: 68ch; margin: 0; }
+section { border-top: 1px solid var(--rule); padding-top: 20px; display: grid; gap: 12px; min-width: 0; }
+.def { margin: 0; max-width: 70ch; font-size: 1.02rem; }
+canvas { display: block; width: 100%; height: 470px; cursor: crosshair; touch-action: manipulation; }
+.ctrl { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
+.ctrl label { font-size: 0.95rem; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; }
+.ctrl input[type=number] { font-family: var(--body); font-size: 0.95rem; width: 5.6ch; color: var(--ink); background: transparent;
+  border: 1px solid var(--rule); border-radius: 4px; padding: 3px 5px; font-variant-numeric: tabular-nums; }
+.ctrl input[type=number].seed { width: 9ch; }
+.ctrl input[type=number]:disabled { color: var(--muted); }
+.ctrl input[type=checkbox] { accent-color: var(--accent); }
+button { font-family: var(--body); font-size: 0.95rem; color: var(--ink); background: transparent; border: 1px solid var(--rule);
+  border-radius: 4px; padding: 5px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); }
+button.on { border-color: var(--accent); color: var(--accent); }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.read { display: flex; flex-wrap: wrap; gap: 4px 22px; font-size: 0.92rem; font-variant-numeric: tabular-nums; color: var(--muted); min-height: 1.4em; }
+.read b { color: var(--ink); font-weight: 400; }
+.read .acc { color: var(--accent); }
+.read .tl { color: var(--teal); }
+.msg { color: var(--accent); font-size: 0.92rem; min-height: 1.3em; margin: 0; }
+.keys { color: var(--muted); font-size: 0.9rem; margin: 0; }
+details.more summary { cursor: pointer; color: var(--teal); font-size: 0.95rem; width: fit-content; }
+details.more summary:hover { text-decoration: underline; }
+details.more[open] summary { margin-bottom: 8px; }
+footer { color: var(--muted); font-size: 0.92rem; max-width: 70ch; }
+footer p { margin: 0 0 6px; }
+a { color: var(--teal); }
+code { font-family: var(--body); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>One path, refined</h1>
+    <p class="lede">A bridge of sticky reflected Brownian motion 𝔜 with stickiness <i>μ</i>, from <i>x</i> to <i>y</i> over [0, <i>T</i>], with local time <i>r</i> at 0 by time <i>T</i>. Click on the picture to query the path at that time. Each click draws the position <i>Y<sub>u</sub></i> and the local time <i>L<sub>u</sub></i> from their exact law given everything drawn before, from a few uniform, normal and exponential variables. No time step and no approximation enter.</p>
+  </header>
+
+  <section aria-labelledby="h-path">
+    <h2 id="h-path">The skeleton</h2>
+    <details class="more"><summary>What the picture shows</summary>
+      <p class="def">The sampler keeps a skeleton of the path, the times it has queried with the position and the local time at each, together with the zeros it has drawn. Between two recorded times the local time either stays constant, and then the path is a Bessel(3) bridge away from 0, or it grows, and then both ends sit at 0. The red bars mark the intervals where it grows. They hold the zero set of the path, and their total length decreases to its Lebesgue measure <i>μr</i> as the skeleton grows. A query in a red bar that lands above 0 also draws the start and the end of its excursion, so the new excursion leaves the red at once.</p>
+    </details>
+    <canvas id="cv" aria-label="The path above and its local time below; click to query the path"></canvas>
+    <div class="read" id="read"></div>
+    <div class="read" id="last"></div>
+    <div class="ctrl">
+      <button id="b-one" title="key 1">Query a random time</button>
+      <button id="b-undo" title="key U">Undo</button>
+      <label><input type="checkbox" id="c-fill"> draw the excursions in full</label>
+    </div>
+  </section>
+
+  <section aria-labelledby="h-par">
+    <h2 id="h-par">The bridge</h2>
+    <div class="ctrl">
+      <label><i>μ</i> <input type="number" id="p-mu" value="0.5" min="0.001" step="0.05"></label>
+      <label><i>T</i> <input type="number" id="p-T" value="1.31" min="0.01" step="0.1"></label>
+      <label><i>x</i> <input type="number" id="p-x" value="0" min="0" step="0.05"></label>
+      <label><i>y</i> <input type="number" id="p-y" value="0" min="0" step="0.05"></label>
+      <label><i>r</i> <input type="number" id="p-r" value="0.62" min="0" step="0.05"></label>
+      <label><input type="checkbox" id="c-free"> draw <i>r</i> given <i>x</i> and <i>y</i></label>
+      <label>seed <input type="number" class="seed" id="p-seed" value="1" min="0" step="1"></label>
+      <button id="b-new" title="key N">New path</button>
+      <button id="b-same">Same seed</button>
+    </div>
+    <p class="msg" id="msg"></p>
+    <p class="def">The ends must satisfy <i>μr</i> &lt; <i>T</i>, and <i>r</i> = 0 needs <i>x</i> + <i>y</i> &gt; 0. With the box ticked, the sampler first draws <i>r</i> from the law of the local time given the two positions (Algorithm 4 of the paper), and the picture is then a bridge given positions only. The seed and the sequence of queries fix the path, so the same seed and the same clicks give the same picture.</p>
+    <p class="keys">Keys 1 (random query), U (undo), N (new path).</p>
+  </section>
+
+  <footer>
+    <p>The samplers are a line-by-line port to JavaScript of <code>code/sticky_bridge.py</code>, the code of the paper, and follow Algorithms 1 to 4 there (sampler.js). C. Mount and I. Fatkullin, <i>Exact bridges for sticky reflected Brownian motion</i>, arXiv (to appear).</p>
+  </footer>
+</main>
+
+<script src="sampler.js"></script>
+<script>
+(function () {
+  'use strict';
+  const S = window.StickySampler;
+  const cv = document.getElementById('cv'), ctx = cv.getContext('2d');
+  const $ = id => document.getElementById(id);
+  const MAXPTS = 60000, MAXUNDO = 60;
+  let P, R, rng, qrng, undo = [], hoverU = null, last = null, nQueries = 0, zTop = 0.5;
+
+  function css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function num(id) { return parseFloat($(id).value); }
+
+  // ------------------------------------------------------------------ a new path
+  function newPath(seed) {
+    const mu = num('p-mu'), T = num('p-T'), x = num('p-x'), y = num('p-y'), free = $('c-free').checked;
+    let r = num('p-r');
+    $('msg').textContent = '';
+    if (!(mu > 0) || !(T > 0) || !(x >= 0) || !(y >= 0)) { $('msg').textContent = 'Need μ > 0, T > 0, x ≥ 0 and y ≥ 0.'; return; }
+    rng = S.makeRng(seed); qrng = S.makeRng(seed ^ 0x5bd1e995);
+    if (free) { r = S.local_time_given_positions(rng, x, y, T, mu); $('p-r').value = r.toPrecision(4); }
+    else {
+      if (!(r >= 0)) { $('msg').textContent = 'Need r ≥ 0.'; return; }
+      if (mu * r >= T) { $('msg').textContent = 'Need μr < T: the path spends the time μr at 0.'; return; }
+      if (r === 0 && x + y === 0) { $('msg').textContent = 'With r = 0 the path never reaches 0, so it needs x + y > 0.'; return; }
+    }
+    P = { mu, T, x, y, r, seed };
+    R = S.Skeleton.bridge(rng, x, y, r, T, mu);
+    undo = []; last = null; nQueries = 0;
+    zTop = Math.max(0.35 * Math.sqrt(T), 1.15 * Math.max(x, y));
+    fill(); draw();
+  }
+
+  // ------------------------------------------------------------------ queries
+  function snapshot() {
+    undo.push({ s: R.s.slice(), z: R.z.slice(), a: R.a.slice(), th: R.th.slice(), last, nQueries });
+    if (undo.length > MAXUNDO) undo.shift();
+  }
+  function intervalOf(u) {               // index i with s_i < u < s_{i+1}, or -1 if u is recorded
+    let lo = 0, hi = R.s.length;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (R.s[m] < u) lo = m + 1; else hi = m; }
+    return (lo < R.s.length && R.s[lo] === u) ? -1 : lo - 1;
+  }
+  function ask(u) {                       // one query, with a note of the case for the readout
+    const i = intervalOf(u);
+    if (i < 0 || R.s.length >= MAXPTS) return null;
+    const kind = R.a[i + 1] === R.a[i] ? 'constant' : 'increasing';
+    const n0 = R.s.length;
+    const [z, a] = R.query(rng, u);
+    nQueries++;
+    let g = null, d = null;
+    if (R.s.length === n0 + 3) { const k = R.s.indexOf(u); g = R.s[k - 1]; d = R.s[k + 1]; }
+    return { u, z, a, kind, g, d };
+  }
+  function fill() {                       // draws each excursion on a grid of about one query per pixel
+    if (!$('c-fill').checked) return;
+    const h = P.T / Math.max(300, cv.clientWidth - 76);
+    const ts = [];
+    for (let i = 0; i + 1 < R.s.length; i++) {
+      if (R.a[i + 1] !== R.a[i]) continue;
+      const L = R.s[i + 1] - R.s[i];
+      if (L <= 1.5 * h) continue;
+      const n = Math.ceil(L / h);
+      for (let k = 1; k < n; k++) ts.push(R.s[i] + k * L / n);
+    }
+    for (const t of ts) { if (R.s.length >= MAXPTS) break; R.query(rng, t); }
+  }
+  function act(times) {                   // queries at the given times, in order, then the excursion fill
+    snapshot();
+    let q = null;
+    for (const u of times) { const res = ask(u); if (res) q = res; }
+    if (q) last = q;
+    fill(); draw();
+  }
+  function redIntervals() {
+    const out = [];
+    for (let i = 0; i + 1 < R.s.length; i++) if (R.a[i + 1] !== R.a[i]) out.push([R.s[i], R.s[i + 1]]);
+    return out;
+  }
+  function randomRedTime() {              // uniform on the red bars (on [0, T] if there are none)
+    const red = redIntervals();
+    let tot = 0; for (const [l, r] of red) tot += r - l;
+    if (tot <= 0) return qrng.random() * P.T;
+    let w = qrng.random() * tot;
+    for (const [l, r] of red) { if (w < r - l) return l + w; w -= r - l; }
+    return red[red.length - 1][1] * 0.999999;
+  }
+  function oneRandom() { act([$('c-fill').checked ? randomRedTime() : qrng.random() * P.T]); }
+  function doUndo() {
+    const st = undo.pop(); if (!st) return;
+    R.s = st.s; R.z = st.z; R.a = st.a; R.th = st.th; last = st.last; nQueries = st.nQueries; draw();
+  }
+  // ------------------------------------------------------------------ drawing
+  let geo = null;
+  function layout() {
+    const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const L = 62, Rm = 14, top = 12, ph = Math.round((h - 70) * 0.68), gapv = 30, lh = h - 70 - ph;
+    geo = { w, h, L, Rm, top, ph, ly: top + ph + gapv, lh };
+  }
+  function X(u) { return geo.L + (u / P.T) * (geo.w - geo.L - geo.Rm); }
+  function U(px) { return (px - geo.L) / (geo.w - geo.L - geo.Rm) * P.T; }
+  function Yp(z) { return geo.top + geo.ph * (1 - z / zTop); }
+  function Yl(a) { return geo.ly + geo.lh * (1 - (P.r > 0 ? a / P.r : 0)); }
+
+  function axes(ink, muted, rule) {
+    ctx.strokeStyle = rule; ctx.lineWidth = 1; ctx.fillStyle = muted;
+    ctx.font = '13px LM, "Latin Modern Roman", serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const step = niceStep(zTop / 3);
+    for (let v = 0; v <= zTop * 1.0001; v += step) {
+      ctx.beginPath(); ctx.moveTo(geo.L, Yp(v)); ctx.lineTo(geo.w - geo.Rm, Yp(v)); ctx.globalAlpha = v === 0 ? 1 : 0.5; ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillText(fmt(v), geo.L - 6, Yp(v));
+    }
+    ctx.beginPath(); ctx.moveTo(geo.L, Yl(0)); ctx.lineTo(geo.w - geo.Rm, Yl(0)); ctx.stroke();
+    if (P.r > 0) { ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.moveTo(geo.L, Yl(P.r)); ctx.lineTo(geo.w - geo.Rm, Yl(P.r)); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.fillText(fmt(P.r), geo.L - 6, Yl(P.r)); }
+    ctx.fillText('0', geo.L - 6, Yl(0));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const ts = niceStep(P.T / 6);
+    for (let t = 0; t <= P.T * 1.0001; t += ts) ctx.fillText(fmt(t), X(t), Yl(0) + 6);
+    ctx.save(); ctx.fillStyle = ink; ctx.font = 'italic 15px LM, "Latin Modern Roman", serif'; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Y', 6, geo.top); ctx.fillText('L', 6, geo.ly); ctx.restore();
+  }
+  function niceStep(x) { const p = Math.pow(10, Math.floor(Math.log10(x))), m = x / p; return p * (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10); }
+  function fmt(v) { return Math.abs(v) < 1e-12 ? '0' : (+v.toPrecision(3)).toString(); }
+
+  function draw() {
+    if (!P) return;
+    layout();
+    const ink = css('--ink'), acc = css('--accent'), teal = css('--teal'), muted = css('--muted'), rule = css('--rule'), ghost = css('--ghost');
+    const n = R.s.length;
+    for (let i = 0; i < n; i++) if (R.z[i] > zTop * 0.95) zTop = R.z[i] / 0.8;
+    ctx.clearRect(0, 0, geo.w, geo.h);
+    axes(ink, muted, rule);
+    // red bars: the increasing intervals, on the axis of the path and as a band under the local time
+    let red = 0, nRed = 0;
+    ctx.fillStyle = acc;
+    for (let i = 0; i + 1 < n; i++) {
+      if (R.a[i + 1] === R.a[i]) continue;
+      red += R.s[i + 1] - R.s[i]; nRed++;
+      const x0 = X(R.s[i]), x1 = Math.max(X(R.s[i + 1]), x0 + 1);
+      ctx.fillRect(x0, Yp(0) - 3, x1 - x0, 6);
+    }
+    // the path on the constant intervals
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.3; ctx.lineJoin = 'round'; ctx.beginPath();
+    for (let i = 0; i + 1 < n; i++) {
+      if (R.a[i + 1] !== R.a[i]) continue;
+      ctx.moveTo(X(R.s[i]), Yp(R.z[i])); ctx.lineTo(X(R.s[i + 1]), Yp(R.z[i + 1]));
+    }
+    ctx.stroke();
+    // the local time: flat on constant intervals, unknown (dashed) across the red
+    ctx.strokeStyle = ink; ctx.lineWidth = 1.4; ctx.beginPath();
+    for (let i = 0; i + 1 < n; i++) if (R.a[i + 1] === R.a[i]) { ctx.moveTo(X(R.s[i]), Yl(R.a[i])); ctx.lineTo(X(R.s[i + 1]), Yl(R.a[i])); }
+    ctx.stroke();
+    ctx.strokeStyle = acc; ctx.setLineDash([3, 3]); ctx.beginPath();
+    for (let i = 0; i + 1 < n; i++) if (R.a[i + 1] !== R.a[i]) { ctx.moveTo(X(R.s[i]), Yl(R.a[i])); ctx.lineTo(X(R.s[i + 1]), Yl(R.a[i + 1])); }
+    ctx.stroke(); ctx.setLineDash([]);
+    // recorded points: dots while they are few, zeros in red
+    const rad = n < 60 ? 3.2 : n < 400 ? 2 : 0;
+    if (rad > 0) for (let i = 0; i < n; i++) {
+      ctx.fillStyle = R.z[i] === 0 ? acc : ink;
+      ctx.beginPath(); ctx.arc(X(R.s[i]), Yp(R.z[i]), rad, 0, 2 * Math.PI); ctx.fill();
+    }
+    // the last query and the zeros it drew
+    if (last) {
+      ctx.strokeStyle = teal; ctx.lineWidth = 2;
+      ring(X(last.u), Yp(last.z), 6);
+      ring(X(last.u), Yl(last.a), 5);
+      if (last.g !== null) { ring(X(last.g), Yp(0), 5); ring(X(last.d), Yp(0), 5); }
+    }
+    // hover cursor
+    if (hoverU !== null) {
+      ctx.strokeStyle = ghost; ctx.lineWidth = 1; ctx.beginPath();
+      ctx.moveTo(X(hoverU), geo.top); ctx.lineTo(X(hoverU), Yl(0)); ctx.stroke();
+    }
+    // readouts
+    const mr = P.mu * P.r;
+    $('read').innerHTML =
+      `<span>queries <b>${nQueries}</b></span><span>recorded times <b>${n}</b></span>` +
+      `<span class="acc">red length <b>${red.toFixed(5)}</b> in ${nRed} bar${nRed === 1 ? '' : 's'}</span>` +
+      `<span>Lebesgue measure of the zero set <i>μr</i> = <b>${mr.toFixed(5)}</b></span>` +
+      (P.r > 0 ? `<span>excess <b>${(red - mr).toExponential(2)}</b></span>` : '');
+    lastLine();
+  }
+  function ring(x, y, r) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.stroke(); }
+  function lastLine() {
+    let html = '';
+    if (last) {
+      html += `<span class="tl">last query at <i>u</i> = <b>${last.u.toFixed(4)}</b></span>` +
+        `<span><i>Y<sub>u</sub></i> = <b>${last.z.toFixed(4)}</b></span><span><i>L<sub>u</sub></i> = <b>${last.a.toFixed(4)}</b></span>` +
+        `<span>${last.kind === 'constant' ? 'a Bessel(3) bridge' : 'a middle bridge'}</span>` +
+        (last.g !== null ? `<span>new excursion from <b>${last.g.toFixed(4)}</b> to <b>${last.d.toFixed(4)}</b></span>` : '');
+    }
+    if (hoverU !== null && R.s.length) {
+      const i = Math.max(0, Math.min(R.s.length - 1, nearest(hoverU)));
+      html += `<span>nearest recorded time <b>${R.s[i].toFixed(4)}</b>, <i>Y</i> = <b>${R.z[i].toFixed(4)}</b>, <i>L</i> = <b>${R.a[i].toFixed(4)}</b></span>`;
+    }
+    $('last').innerHTML = html;
+  }
+  function nearest(u) {
+    let lo = 0, hi = R.s.length;
+    while (lo < hi) { const m = (lo + hi) >> 1; if (R.s[m] < u) lo = m + 1; else hi = m; }
+    if (lo > 0 && (lo === R.s.length || u - R.s[lo - 1] < R.s[lo] - u)) lo--;
+    return lo;
+  }
+
+  // ------------------------------------------------------------------ events
+  cv.addEventListener('click', e => {
+    const rect = cv.getBoundingClientRect(), u = U(e.clientX - rect.left);
+    if (u > 0 && u < P.T) act([u]);
+  });
+  cv.addEventListener('mousemove', e => {
+    const rect = cv.getBoundingClientRect(), u = U(e.clientX - rect.left);
+    hoverU = (u > 0 && u < P.T) ? u : null; draw();
+  });
+  cv.addEventListener('mouseleave', () => { hoverU = null; draw(); });
+  $('b-one').onclick = oneRandom;
+  $('b-undo').onclick = doUndo;
+  $('b-new').onclick = () => { $('p-seed').value = Math.floor(Math.random() * 1e6); newPath(+$('p-seed').value); };
+  $('b-same').onclick = () => { newPath(+$('p-seed').value); };
+  $('c-fill').onchange = () => { if ($('c-fill').checked) { snapshot(); fill(); } draw(); };
+  $('c-free').onchange = () => { $('p-r').disabled = $('c-free').checked; };
+  for (const id of ['p-mu', 'p-T', 'p-x', 'p-y', 'p-r']) $(id).addEventListener('change', () => { newPath(+$('p-seed').value); });
+  document.addEventListener('keydown', e => {
+    if (e.target.tagName === 'INPUT' || e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key.toLowerCase();
+    if (k === '1') oneRandom();
+    else if (k === 'u') doUndo(); else if (k === 'n') $('b-new').onclick();
+    else return;
+  });
+  window.addEventListener('resize', draw);
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  if (document.fonts) document.fonts.ready.then(draw);
+  newPath(1);
+})();
+</script>
+</body>
+</html>

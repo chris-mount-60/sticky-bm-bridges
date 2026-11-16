@@ -1,0 +1,12 @@
+Copyright (c) 2026 Christopher Mount and Ibrahim Fatkullin
+
+The movies in docs/movies, the text and pictures of the pages in docs/, and code/pseudocode.pdf (once released)
+are licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0).
+You may share and adapt them for any purpose, provided you give appropriate credit, provide a link to the license,
+and indicate if changes were made. The full license is at https://creativecommons.org/licenses/by/4.0/legalcode
+
+Suggested credit: C. Mount and I. Fatkullin, "Exact bridges for sticky reflected Brownian motion" (2026).
+
+All source code in this repository, including the JavaScript in docs/, is under the MIT License in the file LICENSE.
+The Latin Modern fonts embedded in docs/refine/fonts.css and docs/zero-set/index.html are distributed under the GUST
+Font License (https://www.gust.org.pl/projects/e-foundry/licenses).

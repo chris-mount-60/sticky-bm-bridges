@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sampling sticky Brownian motion and its local time</title>
+<link rel="stylesheet" href="refine/fonts.css">
+<style>
+:root { --bg: #ffffff; --ink: #0c234b; --muted: #55607a; --rule: #d6dae2; --teal: #00808c;
+        --body: "LM", "LMM", "LMX", "Latin Modern Roman", "Computer Modern", serif; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1220; --ink: #c9d6f2; --muted: #93a0b8; --rule: #2a3550; --teal: #4cc9d4; color-scheme: dark; } }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 17px; line-height: 1.5; margin: 0; padding: 28px 16px 48px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 20px; }
+h1 { font-weight: 700; font-size: clamp(1.6rem, 4vw, 2.1rem); line-height: 1.15; margin: 0; }
+p { margin: 0; }
+.lede { color: var(--muted); }
+section { border-top: 1px solid var(--rule); padding-top: 16px; display: grid; gap: 8px; }
+h2 { font-size: 1.2rem; margin: 0; }
+a { color: var(--teal); }
+video { width: 100%; height: auto; border: 1px solid var(--rule); background: #fff; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Sampling sticky Brownian motion and its local time</h1>
+  <p class="lede">The pages and movies of a talk at the AMS Fall Western Sectional Meeting, Arizona State University,
+    November 8, 2026, by C. Mount. They accompany the paper of C. Mount and I. Fatkullin, <i>Exact bridges for sticky
+    reflected Brownian motion</i> (to appear on arXiv).</p>
+  <section>
+    <h2><a href="refine/">One path, refined</a></h2>
+    <p>Click on a bridge of sticky reflected Brownian motion to query it at that time. The samplers of the paper,
+      ported to JavaScript, draw the position and the local time there from their exact law given everything drawn
+      before.</p>
+  </section>
+  <section>
+    <h2><a href="zero-set/">The zero set of reflected Brownian motion, and its local time</a></h2>
+    <p>Drag each 𝜀 and watch the approximations of the zero set and of the local time close in on their limits.</p>
+  </section>
+  <section>
+    <h2>A reflecting wall and a sticky wall</h2>
+    <p>A heavy particle moves only because the light molecules of a gas hit it. On the right, the trace shows its
+      distance to the wall. The first wall reflects the particle. The second wall holds it in a shallow well until a
+      hard enough hit frees it, and the trace marks the time held in red.</p>
+    <video src="movies/reflecting_wall.mp4" controls muted playsinline preload="metadata"></video>
+    <video src="movies/sticky_wall.mp4" controls muted playsinline preload="metadata"></video>
+  </section>
+  <section>
+    <h2>One path, refined (the movie)</h2>
+    <p>The samplers refine one bridge of sticky reflected Brownian motion with about 500 queries. The red bars mark the times
+      not yet inside a found excursion. Their length decreases to the time the path spends at 0.</p>
+    <video src="movies/one_path_refined.mp4" controls muted playsinline preload="metadata"></video>
+  </section>
+  <p class="lede">The JavaScript is under the MIT License, and the movies and the text and pictures of the pages are under
+    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</p>
+</main>
+</body>
+</html>
