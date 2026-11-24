@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+# the scripts in numerics/ write their PDFs next to themselves
+numerics/*.pdf

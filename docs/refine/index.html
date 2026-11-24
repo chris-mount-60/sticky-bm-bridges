@@ -89,12 +89,12 @@ code { font-family: var(--body); }
       <button id="b-same">Same seed</button>
     </div>
     <p class="msg" id="msg"></p>
-    <p class="def">The ends must satisfy <i>μr</i> &lt; <i>T</i>, and <i>r</i> = 0 needs <i>x</i> + <i>y</i> &gt; 0. With the box ticked, the sampler first draws <i>r</i> from the law of the local time given the two positions (Algorithm 4 of the paper), and the picture is then a bridge given positions only. The seed and the sequence of queries fix the path, so the same seed and the same clicks give the same picture.</p>
+    <p class="def">The ends must satisfy <i>μr</i> &lt; <i>T</i>, and <i>r</i> = 0 needs <i>x</i> + <i>y</i> &gt; 0. With the box ticked, the page first draws <i>r</i> from the law of the local time given the two positions, by a sampler that is not in the paper, and the picture is then a bridge given positions only. The seed and the sequence of queries fix the path, so the same seed and the same clicks give the same picture.</p>
     <p class="keys">Keys 1 (random query), U (undo), N (new path).</p>
   </section>
 
   <footer>
-    <p>The samplers are a line-by-line port to JavaScript of <code>code/sticky_bridge.py</code>, the code of the paper, and follow Algorithms 1 to 4 there (sampler.js). C. Mount and I. Fatkullin, <i>Exact bridges for sticky reflected Brownian motion</i>, arXiv (to appear).</p>
+    <p>The samplers of Algorithms 1 to 3 are a line-by-line port to JavaScript of <code>code/sticky_bridge.py</code>, the code of the paper (sampler.js). The sampler behind the box above is in neither the paper nor that code. C. Mount and I. Fatkullin, <i>Exact bridges for sticky reflected Brownian motion</i>, arXiv (to appear).</p>
   </footer>
 </main>
 

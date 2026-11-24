@@ -282,7 +282,7 @@
     }
   }
 
-  // ------------------------------------------------------------------------------------- Algorithm 4
+  // ------------------------------------------------------------------------------------- the local time given the positions (not in the paper)
   function atom_prob_(v, K) {
     // expm1(v) / (expm1(v) + K) for v >= 0 and K > 0, without overflow for large v
     if (v <= 1) { const e = Math.expm1(v); return e / (e + K); }
@@ -290,7 +290,7 @@
   }
 
   function local_time_given_positions(rng, x, y, T, mu) {
-    // L_T given Y_0 = x and Y_T = y (Proposition F.1 and Lemma F.1)
+    // L_T given Y_0 = x and Y_T = y; this sampler is not in the paper
     const has_atom = x > 0 && y > 0;
     const weight = 2 * Math.sqrt(2 * Math.PI * T) / mu;
     const b = x + y + 2 * T / mu;

@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the paper as below."
+title: "Exact bridges for sticky reflected Brownian motion: code, numerics and pages"
+authors:
+  - family-names: Mount
+    given-names: Christopher
+  - family-names: Fatkullin
+    given-names: Ibrahim
+license: MIT
+repository-code: "https://github.com/chris-mount-60/sticky-bm-bridges"
+url: "https://chris-mount-60.github.io/sticky-bm-bridges/"
+version: "1.0"
+preferred-citation:
+  type: unpublished
+  title: "Exact bridges for sticky reflected Brownian motion"
+  authors:
+    - family-names: Mount
+      given-names: Christopher
+    - family-names: Fatkullin
+      given-names: Ibrahim
+  year: 2026
+  notes: "Preprint, to appear on arXiv"
