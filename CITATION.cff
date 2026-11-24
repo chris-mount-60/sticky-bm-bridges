@@ -9,7 +9,6 @@ authors:
 license: MIT
 repository-code: "https://github.com/chris-mount-60/sticky-bm-bridges"
 url: "https://chris-mount-60.github.io/sticky-bm-bridges/"
-version: "1.0"
 preferred-citation:
   type: unpublished
   title: "Exact bridges for sticky reflected Brownian motion"
