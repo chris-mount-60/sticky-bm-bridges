@@ -38,5 +38,5 @@ To install the Python packages, run `pip install -r requirements.txt`.
 ## License
 
 The code, including the JavaScript of the pages, is under the MIT License (LICENSE). The movies and the text and
-pictures of the pages are under CC BY 4.0 (LICENSE-media). The paper in `paper/` is under neither license; its
-copyright stays with the authors.
+pictures of the pages are under CC BY 4.0 (LICENSE-media). The paper in `paper/` is not covered by either license. Its copyright stays with the authors, and arXiv distributes
+it under the arXiv.org perpetual, non-exclusive license.
