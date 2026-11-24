@@ -290,7 +290,7 @@
   }
 
   function local_time_given_positions(rng, x, y, T, mu) {
-    // L_T given Y_0 = x and Y_T = y; this sampler is not in the paper
+    // L_T given Y_0 = x and Y_T = y; this sampler appears in the compannion note
     const has_atom = x > 0 && y > 0;
     const weight = 2 * Math.sqrt(2 * Math.PI * T) / mu;
     const b = x + y + 2 * T / mu;
